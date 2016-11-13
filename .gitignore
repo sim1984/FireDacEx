@@ -115,3 +115,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Compiled
+/Win32
+/Win64
