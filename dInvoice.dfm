@@ -18,7 +18,7 @@ object dmInvoice: TdmInvoice
   end
   object qryInvoice: TFDQuery
     Connection = dmMain.FDConnection
-    Transaction = dmMain.trRead
+    Transaction = trRead
     UpdateTransaction = trWrite
     UpdateOptions.AssignedValues = [uvEDelete, uvEInsert, uvEUpdate]
     UpdateOptions.EnableDelete = False
@@ -31,7 +31,7 @@ object dmInvoice: TdmInvoice
       '  customer.NAME AS customer_name,'
       '  invoice.invoice_date AS invoice_date,'
       '  invoice.total_sale AS total_sale,'
-      '  IIF(invoice.payed=1, '#39'Yes'#39', '#39'No'#39') AS payed '
+      '  IIF(invoice.paid=1, '#39'Yes'#39', '#39'No'#39') AS paid '
       'FROM'
       '  invoice'
       '  JOIN customer ON customer.customer_id = invoice.customer_id '
@@ -62,7 +62,6 @@ object dmInvoice: TdmInvoice
       Required = True
     end
     object qryInvoiceCUSTOMER_ID: TIntegerField
-      DisplayLabel = 'Customer Id'
       FieldName = 'CUSTOMER_ID'
       Origin = 'CUSTOMER_ID'
       Required = True
@@ -82,18 +81,21 @@ object dmInvoice: TdmInvoice
       FieldName = 'INVOICE_DATE'
       Origin = 'INVOICE_DATE'
     end
-    object qryInvoiceTOTAL_SALE: TFloatField
+    object qryInvoiceTOTAL_SALE: TBCDField
       DisplayLabel = 'Amount'
       FieldName = 'TOTAL_SALE'
       Origin = 'TOTAL_SALE'
+      ReadOnly = True
       DisplayFormat = '0.00'
       currency = True
+      Precision = 18
+      Size = 2
     end
-    object qryInvoicePAYED: TWideStringField
+    object qryInvoicePAID: TWideStringField
       AutoGenerateValue = arDefault
-      DisplayLabel = 'Payed'
-      FieldName = 'PAYED'
-      Origin = 'PAYED'
+      DisplayLabel = 'Paid'
+      FieldName = 'PAID'
+      Origin = 'PAID'
       ProviderFlags = []
       ReadOnly = True
       FixedChar = True
@@ -181,7 +183,7 @@ object dmInvoice: TdmInvoice
     MasterSource = MasterSource
     MasterFields = 'INVOICE_ID'
     Connection = dmMain.FDConnection
-    Transaction = dmMain.trRead
+    Transaction = trRead
     UpdateTransaction = trWrite
     SQL.Strings = (
       'SELECT'
@@ -205,21 +207,18 @@ object dmInvoice: TdmInvoice
         ParamType = ptInput
       end>
     object qryInvoiceLineINVOICE_LINE_ID: TIntegerField
-      DisplayLabel = 'Id'
       FieldName = 'INVOICE_LINE_ID'
       Origin = 'INVOICE_LINE_ID'
       Required = True
       Visible = False
     end
     object qryInvoiceLineINVOICE_ID: TIntegerField
-      DisplayLabel = 'Invoice Id'
       FieldName = 'INVOICE_ID'
       Origin = 'INVOICE_ID'
       Required = True
       Visible = False
     end
     object qryInvoiceLinePRODUCT_ID: TIntegerField
-      DisplayLabel = 'Product Id'
       FieldName = 'PRODUCT_ID'
       Origin = 'PRODUCT_ID'
       Required = True
@@ -234,21 +233,23 @@ object dmInvoice: TdmInvoice
       ReadOnly = True
       Size = 100
     end
-    object qryInvoiceLineQUANTITY: TIntegerField
+    object qryInvoiceLineQUANTITY: TLargeintField
       DisplayLabel = 'Quantity'
       FieldName = 'QUANTITY'
       Origin = 'QUANTITY'
       Required = True
     end
-    object qryInvoiceLineSALE_PRICE: TFloatField
+    object qryInvoiceLineSALE_PRICE: TBCDField
       DisplayLabel = 'Price'
       FieldName = 'SALE_PRICE'
       Origin = 'SALE_PRICE'
       Required = True
       DisplayFormat = '0.00'
       currency = True
+      Precision = 18
+      Size = 2
     end
-    object qryInvoiceLineTOTAL: TFloatField
+    object qryInvoiceLineTOTAL: TBCDField
       AutoGenerateValue = arDefault
       DisplayLabel = 'Total'
       FieldName = 'TOTAL'
@@ -257,6 +258,8 @@ object dmInvoice: TdmInvoice
       ReadOnly = True
       DisplayFormat = '0.00'
       currency = True
+      Precision = 18
+      Size = 2
     end
   end
   object qryAddInvoiceLine: TFDCommand
@@ -316,5 +319,13 @@ object dmInvoice: TdmInvoice
       end>
     Left = 488
     Top = 356
+  end
+  object trRead: TFDTransaction
+    Options.ReadOnly = True
+    Options.AutoStart = False
+    Options.AutoStop = False
+    Connection = dmMain.FDConnection
+    Left = 280
+    Top = 208
   end
 end

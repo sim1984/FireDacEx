@@ -31,7 +31,6 @@ object MainForm: TMainForm
     Style = tsSoftTabs
     TabPosition = tpTop
     OnChange = mdiChildrenTabsChange
-    ExplicitWidth = 636
   end
   object StatusBar: TStatusBar
     Left = 0
@@ -42,8 +41,6 @@ object MainForm: TMainForm
       item
         Width = 300
       end>
-    ExplicitTop = 377
-    ExplicitWidth = 636
   end
   object MainMenu: TMainMenu
     Left = 536

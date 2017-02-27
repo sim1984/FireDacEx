@@ -5,7 +5,7 @@ object dmCustomers: TdmCustomers
   Width = 650
   object qryCustomer: TFDQuery
     Connection = dmMain.FDConnection
-    Transaction = dmMain.trRead
+    Transaction = trRead
     UpdateTransaction = trWrite
     UpdateOptions.AssignedValues = [uvGeneratorName]
     UpdateOptions.GeneratorName = 'GEN_CUSTOMER_ID'
@@ -108,5 +108,13 @@ object dmCustomers: TdmCustomers
     DataSet = qryCustomer
     Left = 240
     Top = 56
+  end
+  object trRead: TFDTransaction
+    Options.ReadOnly = True
+    Options.AutoStart = False
+    Options.AutoStop = False
+    Connection = dmMain.FDConnection
+    Left = 480
+    Top = 128
   end
 end

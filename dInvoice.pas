@@ -15,8 +15,8 @@ type
     CUSTOMER_ID: TIntegerField;
     CUSTOMER_NAME: TWideStringField;
     INVOICE_DATE: TSQLTimeStampField;
-    TOTAL_SALE: TFloatField;
-    PAYED: TWideStringField;
+    TOTAL_SALE: TBCDField;
+    PAID: TWideStringField;
   end;
 
   TInvoiceLineRecord = record
@@ -24,39 +24,39 @@ type
     INVOICE_ID: TIntegerField;
     PRODUCT_ID: TIntegerField;
     PRODUCTNAME: TWideStringField;
-    QUANTITY: TIntegerField;
-    SALE_PRICE: TFloatField;
-    TOTAL: TFloatField;
+    QUANTITY: TLargeIntField;
+    SALE_PRICE: TBCDField;
+    TOTAL: TBCDField;
   end;
 
   TdmInvoice = class(TDataModule)
     MasterSource: TDataSource;
     trWrite: TFDTransaction;
     qryInvoice: TFDQuery;
-    qryInvoiceINVOICE_ID: TIntegerField;
-    qryInvoiceCUSTOMER_ID: TIntegerField;
-    qryInvoiceCUSTOMER_NAME: TWideStringField;
-    qryInvoiceINVOICE_DATE: TSQLTimeStampField;
-    qryInvoiceTOTAL_SALE: TFloatField;
-    qryInvoicePAYED: TWideStringField;
     qryAddInvoice: TFDCommand;
     qryEditInvoice: TFDCommand;
     qryDeleteInvoice: TFDCommand;
     qryPayForInvoice: TFDCommand;
     DetailSource: TDataSource;
     qryInvoiceLine: TFDQuery;
+    qryAddInvoiceLine: TFDCommand;
+    qryEditInvoiceLine: TFDCommand;
+    qryDeleteInvoiceLine: TFDCommand;
+    trRead: TFDTransaction;
     qryInvoiceLineINVOICE_LINE_ID: TIntegerField;
     qryInvoiceLineINVOICE_ID: TIntegerField;
     qryInvoiceLinePRODUCT_ID: TIntegerField;
     qryInvoiceLinePRODUCTNAME: TWideStringField;
-    qryInvoiceLineQUANTITY: TIntegerField;
-    qryInvoiceLineSALE_PRICE: TFloatField;
-    qryInvoiceLineTOTAL: TFloatField;
-    qryAddInvoiceLine: TFDCommand;
-    qryEditInvoiceLine: TFDCommand;
-    qryDeleteInvoiceLine: TFDCommand;
-    procedure DataModuleCreate(Sender: TObject);
-  private
+    qryInvoiceLineQUANTITY: TLargeintField;
+    qryInvoiceLineSALE_PRICE: TBCDField;
+    qryInvoiceLineTOTAL: TBCDField;
+    qryInvoiceINVOICE_ID: TIntegerField;
+    qryInvoiceCUSTOMER_ID: TIntegerField;
+    qryInvoiceCUSTOMER_NAME: TWideStringField;
+    qryInvoiceINVOICE_DATE: TSQLTimeStampField;
+    qryInvoiceTOTAL_SALE: TBCDField;
+    qryInvoicePAID: TWideStringField;
+    procedure DataModuleCreate(Sender: TObject);  private
     FInvoice: TInvoiceRecord;
     FInvoiceLine: TInvoiceLineRecord;
   public
@@ -146,6 +146,8 @@ procedure TdmInvoice.Close;
 begin
   qryInvoiceLine.Close;
   qryInvoice.Close;
+  if trRead.Active then
+    trRead.Commit;
 end;
 
 procedure TdmInvoice.DataModuleCreate(Sender: TObject);
@@ -155,7 +157,7 @@ begin
   FInvoice.CUSTOMER_NAME := qryInvoiceCUSTOMER_NAME;
   FInvoice.INVOICE_DATE := qryInvoiceINVOICE_DATE;
   FInvoice.TOTAL_SALE := qryInvoiceTOTAL_SALE;
-  FInvoice.PAYED :=  qryInvoicePAYED;
+  FInvoice.PAID :=  qryInvoicePAID;
 
   FInvoiceLine.INVOICE_LINE_ID := qryInvoiceLineINVOICE_LINE_ID;
   FInvoiceLine.INVOICE_ID := qryInvoiceLineINVOICE_ID;
@@ -260,6 +262,7 @@ end;
 
 procedure TdmInvoice.Open;
 begin
+  trRead.StartTransaction;
   qryInvoice.ParamByName('date_begin').AsSqlTimeStamp := dmMain.BeginDateSt;
   qryInvoice.ParamByName('date_end').AsSqlTimeStamp := dmMain.EndDateSt;
   qryInvoice.Open;

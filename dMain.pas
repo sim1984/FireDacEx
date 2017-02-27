@@ -14,7 +14,6 @@ uses
 type
   TdmMain = class(TDataModule)
     FDConnection: TFDConnection;
-    trRead: TFDTransaction;
     FDPhysFBDriverLink: TFDPhysFBDriverLink;
     FDGUIxWaitCursor: TFDGUIxWaitCursor;
     ImageList: TImageList;
@@ -70,7 +69,7 @@ begin
 
   // In real systems is usually calculated from the current date
   // xDate := Now;
-  xDate := StrToDate('01.10.2015');
+  xDate := EncodeDate(2015, 10, 1);
 
   // By default, display data for the last 90 days
   FBeginDate := Int(xDate) - 75;
@@ -114,7 +113,6 @@ begin
   if not FDConnection.Connected then
     Halt;
 
-  trRead.StartTransaction;
 end;
 
 procedure TdmMain.DataModuleDestroy(Sender: TObject);
@@ -122,8 +120,6 @@ begin
   FDateChangeHandlers.Free;
   FDateChangeHandlers := nil;
 
-  if trRead.Active then
-    trRead.Commit;
   FDConnection.Close();
 end;
 

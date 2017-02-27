@@ -5,7 +5,7 @@ object dmGoods: TdmGoods
   Width = 691
   object qryGoods: TFDQuery
     Connection = dmMain.FDConnection
-    Transaction = dmMain.trRead
+    Transaction = trRead
     UpdateTransaction = trWrite
     UpdateOptions.AssignedValues = [uvFetchGeneratorsPoint, uvCheckRequired]
     UpdateOptions.FetchGeneratorsPoint = gpNone
@@ -37,13 +37,15 @@ object dmGoods: TdmGoods
       Required = True
       Size = 40
     end
-    object qryGoodsPRICE: TFloatField
+    object qryGoodsPRICE: TBCDField
       DisplayLabel = 'Price'
       FieldName = 'PRICE'
       Origin = 'PRICE'
       Required = True
       DisplayFormat = '0.00'
       currency = True
+      Precision = 18
+      Size = 2
     end
     object qryGoodsDESCRIPTION: TFDWideMemoField
       DisplayLabel = 'Description'
@@ -90,5 +92,12 @@ object dmGoods: TdmGoods
     DataSet = qryGoods
     Left = 440
     Top = 56
+  end
+  object trRead: TFDTransaction
+    Options.ReadOnly = True
+    Options.AutoStop = False
+    Connection = dmMain.FDConnection
+    Left = 416
+    Top = 152
   end
 end

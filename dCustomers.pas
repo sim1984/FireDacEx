@@ -28,6 +28,7 @@ type
     FDUpdateCustomer: TFDUpdateSQL;
     trWrite: TFDTransaction;
     DataSource: TDataSource;
+    trRead: TFDTransaction;
     procedure DataModuleCreate(Sender: TObject);
   private
     FCustomer: TCustomerRecord;
@@ -71,6 +72,8 @@ end;
 procedure TdmCustomers.Close;
 begin
   qryCustomer.Close;
+  if trRead.Active then
+    trRead.Commit;
 end;
 
 procedure TdmCustomers.DataModuleCreate(Sender: TObject);
@@ -96,6 +99,7 @@ end;
 
 procedure TdmCustomers.Open;
 begin
+  trRead.StartTransaction;
   qryCustomer.Open;
 end;
 

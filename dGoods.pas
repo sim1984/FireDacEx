@@ -13,7 +13,7 @@ type
   TProductRecord = record
     PRODUCT_ID: TIntegerField;
     NAME: TWideStringField;
-    PRICE: TFloatField;
+    PRICE: TBCDField;
     DESCRIPTION: TFDWideMemoField;
   end;
 
@@ -21,11 +21,12 @@ type
     qryGoods: TFDQuery;
     qryGoodsPRODUCT_ID: TIntegerField;
     qryGoodsNAME: TWideStringField;
-    qryGoodsPRICE: TFloatField;
     qryGoodsDESCRIPTION: TFDWideMemoField;
     FDUpdateGoods: TFDUpdateSQL;
     trWrite: TFDTransaction;
     DataSource: TDataSource;
+    trRead: TFDTransaction;
+    qryGoodsPRICE: TBCDField;
     procedure DataModuleCreate(Sender: TObject);
   private
     FProduct: TProductRecord;
@@ -69,6 +70,8 @@ end;
 procedure TdmGoods.Close;
 begin
   qryGoods.Close;
+  if trRead.Active then
+    trRead.Commit;
 end;
 
 procedure TdmGoods.DataModuleCreate(Sender: TObject);
@@ -93,6 +96,7 @@ end;
 
 procedure TdmGoods.Open;
 begin
+  trRead.StartTransaction;
   qryGoods.Open;
 end;
 

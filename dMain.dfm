@@ -16,18 +16,10 @@ object dmMain: TdmMain
       'DriverID=FB')
     TxOptions.AutoStart = False
     TxOptions.AutoStop = False
+    Connected = True
     LoginPrompt = False
     Left = 504
     Top = 80
-  end
-  object trRead: TFDTransaction
-    Options.ReadOnly = True
-    Options.AutoStart = False
-    Options.AutoStop = False
-    Options.EnableNested = False
-    Connection = FDConnection
-    Left = 504
-    Top = 144
   end
   object FDPhysFBDriverLink: TFDPhysFBDriverLink
     Left = 504
@@ -44,7 +36,7 @@ object dmMain: TdmMain
     Left = 328
     Top = 272
     Bitmap = {
-      494C010106001800700018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001800740018001800FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000600000003000000001002000000000000048
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
