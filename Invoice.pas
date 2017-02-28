@@ -316,7 +316,7 @@ begin
   end;
 
   try
-    Invoices.AddInvoice(xEditorForm.ProductId, xEditorForm.Quantity);
+    Invoices.AddInvoiceLine(xEditorForm.ProductId, xEditorForm.Quantity);
 
     Action := caFree;
   except
